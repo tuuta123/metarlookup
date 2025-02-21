@@ -52,10 +52,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to fetch airport info
     async function fetchAirportInfo(icao) {
-        const url = `/airport/${icao}`;
+        const url = `https://cors-anywhere.herokuapp.com/https://aviationweather.gov/api/data/airport?ids=${icao}`;
         try {
             const response = await fetch(url);
-            if (!response.ok) throw new Error("Error fetching airport data");
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             const data = await response.text();
             console.log("Airport Info:", data); // Debugging
             airportInfoBox.innerHTML = `<h3>Airport Info</h3><pre>${data}</pre>`;
@@ -67,16 +67,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to fetch weather data
     async function fetchWeather(icao) {
-        const url = `/weather/${icao}`;
+        const url = `https://cors-anywhere.herokuapp.com/https://aviationweather.gov/api/data/metar?ids=${icao}`;
         try {
             const response = await fetch(url);
-            if (!response.ok) throw new Error("Error fetching weather data");
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
             const data = await response.text();
             console.log("METAR Data:", data); // Debugging
             weatherBox.innerHTML = `<h3>METAR (& TAF)</h3><pre>${data}</pre>`;
         } catch (error) {
             console.error("Error loading weather data:", error);
-            weatherBox.innerHTML = `<h3>METAR (& TAF)</h3><p>Error loading weather data.</p>`;
+            weatherBox.innerHTML = `<h3>METAR (& TAF)</h3><p>Error loading weather data. Please try again later.</p>`;
         }
     }
 
