@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metar - Multiple</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="site-title">METARs (Multiple)</h1>
+            <nav>
+                <a href="index.html">Single</a>
+                <a href="multiple.html">Multiple</a>
+                <a href="settings.html">Settings</a> <!-- Added settings link -->
+            </nav>
+            <button id="toggle-mode">🌙 Dark Mode</button>
+        </header>
+
+        <div class="content">
+            <div class="multiple-panel">
+                <h2>Add METARs</h2>
+                <input type="text" id="metar-input" placeholder="Enter ICAO code (e.g., EFHK)">
+                <button id="add-metar">Add</button>
+                <button id="clear-all">Clear All</button> <!-- Added Clear All button -->
+                <div id="metar-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="multiple.js"></script>
+</body>
+</html>

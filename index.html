@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metar - Single</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 id="site-title">METAR (Single)</h1>
+            <nav>
+                <a href="index.html">Single</a>
+                <a href="multiple.html">Multiple</a>
+                <a href="settings.html">Settings</a> <!-- Link to settings page -->
+            </nav>
+            <button id="toggle-mode">🌙 Dark Mode</button>
+        </header>
+
+        <div class="content">
+            <div class="left-panel">
+                <h2 id="airport-title">Select an Airport</h2>
+                <div class="search-container">
+                    <input type="text" id="search-box" placeholder="Enter ICAO code (e.g., EFHK)">
+                    <button id="find-button">Find</button>
+                </div>
+                <select id="airport-dropdown"></select>
+                <div id="weather"><p>Loading...</p></div>
+            </div>
+
+            <div class="right-panel">
+                <h2>Airport Info</h2>
+                <div id="airport-info"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
