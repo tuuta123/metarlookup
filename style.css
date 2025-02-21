@@ -1,160 +1,337 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const dropdown = document.getElementById("airport-dropdown");
-    const searchBox = document.getElementById("search-box");
-    const findButton = document.getElementById("find-button");
-    const airportTitle = document.getElementById("airport-title");
-    const airportInfoBox = document.getElementById("airport-info");
-    const weatherBox = document.getElementById("weather");
-    const toggleModeBtn = document.getElementById("toggle-mode");
+/* General styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
 
-    const airports = [
-        "EFET", "EFHA", "EFHK", "EFIV", "EFJO", "EFJY", "EFKE", "EFKI",
-        "EFKK", "EFKS", "EFKT", "EFKU", "EFLP", "EFMA", "EFMI", "EFOU",
-        "EFPO", "EFRO", "EFSA", "EFSI", "EFTP", "EFTU", "EFUT", "EFVA"
-    ].sort(); // Sort alphabetically
+/* Light Mode Colors */
+:root {
+    --background: #f4f4f4;
+    --primary: #2a2a72;
+    --secondary: #009ffd;
+    --text: #333;
+    --card: #ffffff;
+}
 
-    let autoRefreshInterval;
+/* Dark Mode Colors */
+.dark-mode {
+    --background: #121212;
+    --primary: #ff4081;
+    --secondary: #8c9eff;
+    --text: #e0e0e0;
+    --card: #1e1e1e;
+}
 
-    // Function to toggle dark/light mode
-    function toggleMode() {
-        document.body.classList.toggle("dark-mode");
-        const isDarkMode = document.body.classList.contains("dark-mode");
-        toggleModeBtn.textContent = isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode";
-        localStorage.setItem("theme", isDarkMode ? "dark" : "light");
+/* Body styling */
+body {
+    background-color: var(--background);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Main container */
+.container {
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Navigation menu */
+nav {
+    display: flex;
+    gap: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+nav a:hover {
+    background-color: var(--secondary);
+}
+
+/* Toggle button */
+#toggle-mode {
+    background: var(--secondary);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#toggle-mode:hover {
+    background: var(--primary);
+}
+
+/* Layout */
+.content {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+/* Left Panel (Single Mode) */
+.left-panel {
+    flex: 1;
+    background: var(--card);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Right Panel (Single Mode) */
+.right-panel {
+    flex: 1;
+    background: var(--card);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Search container */
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Search box */
+#search-box {
+    flex: 1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--secondary);
+    background: var(--card);
+    color: var(--text);
+}
+
+/* Find button */
+#find-button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background: var(--secondary);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#find-button:hover {
+    background: var(--primary);
+}
+
+/* Dropdown */
+#airport-dropdown {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--secondary);
+    background: var(--card);
+    color: var(--text);
+}
+
+/* Info & Weather */
+#airport-info,
+#weather {
+    margin-top: 15px;
+    padding: 10px;
+    background: var(--background);
+    border-radius: 5px;
+    overflow-wrap: break-word; /* Ensure text wraps */
+    word-wrap: break-word; /* Ensure text wraps */
+    white-space: pre-wrap; /* Preserve formatting but allow wrapping */
+}
+
+/* Align METAR & TAF to left */
+#weather pre {
+    text-align: left;
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+/* Multiple Page */
+.multiple-panel {
+    width: 100%;
+    background: var(--card);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Input and Button (Multiple Mode) */
+#metar-input {
+    width: calc(100% - 80px);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--secondary);
+    background: var(--card);
+    color: var(--text);
+}
+
+#add-metar {
+    width: 70px;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background: var(--secondary);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#add-metar:hover {
+    background: var(--primary);
+}
+
+/* Clear All Button (Multiple Mode) */
+#clear-all {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
+    border: none;
+    background: #ff4081; /* Red color for emphasis */
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#clear-all:hover {
+    background: #e91e63; /* Darker red on hover */
+}
+
+/* METAR Box (Multiple Mode) */
+.metar-box {
+    margin-top: 15px;
+    padding: 10px;
+    background: var(--background);
+    border-radius: 5px;
+    position: relative;
+}
+
+.metar-box h3 {
+    margin-bottom: 10px;
+}
+
+.metar-box pre {
+    text-align: left;
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+/* Remove Button (Multiple Mode) */
+.remove-metar {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #ff4081;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+}
+
+.remove-metar:hover {
+    background: #e91e63;
+}
+
+/* Settings Page */
+.settings-panel {
+    width: 100%;
+    background: var(--card);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.setting {
+    margin-bottom: 15px;
+}
+
+.setting label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.setting select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--secondary);
+    background: var(--card);
+    color: var(--text);
+}
+
+#save-settings {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    background: var(--secondary);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#save-settings:hover {
+    background: var(--primary);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.left-panel, .right-panel, .multiple-panel, .settings-panel {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column; /* Stack panels vertically on small screens */
     }
 
-    // Function to load dark mode preference
-    function loadDarkModePreference() {
-        const isDarkMode = localStorage.getItem("theme") === "dark";
-        if (isDarkMode) {
-            document.body.classList.add("dark-mode");
-            toggleModeBtn.textContent = "☀️ Light Mode";
-        } else {
-            document.body.classList.remove("dark-mode");
-            toggleModeBtn.textContent = "🌙 Dark Mode";
-        }
+    header {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    // Function to create the dropdown options
-    function createDropdown(filter = "") {
-        const filteredAirports = airports.filter(icao =>
-            icao.toLowerCase().includes(filter.toLowerCase())
-        );
-        dropdown.innerHTML = filteredAirports.map(icao => `<option value="${icao}">${icao}</option>`).join('');
-        console.log("Dropdown options:", filteredAirports); // Debugging
-
-        // Automatically select the first option in the dropdown
-        if (filteredAirports.length > 0) {
-            dropdown.value = filteredAirports[0];
-            updateData(filteredAirports[0]); // Update weather and airport info
-        }
+    nav {
+        margin-top: 10px;
     }
 
-    // Function to fetch airport info (mock data)
-    async function fetchAirportInfo(icao) {
-        const mockData = `Airport Info for ${icao}:
-Name: Helsinki-Vantaa Airport
-Location: Helsinki, Finland
-Elevation: 55m
-Timezone: UTC +2`;
-        airportInfoBox.innerHTML = `<h3>Airport Info</h3><pre>${mockData}</pre>`;
+    #toggle-mode {
+        margin-top: 10px;
     }
-
-    // Function to fetch weather data from AviationWeather.gov
-    async function fetchWeather(icao) {
-        const url = `https://aviationweather.gov/api/data/metar?ids=${icao}`;
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error("Error fetching weather data");
-            const data = await response.text();
-            weatherBox.innerHTML = `<h3>METAR (& TAF)</h3><pre>${data}</pre>`;
-        } catch (error) {
-            console.error("Error loading weather data:", error);
-            weatherBox.innerHTML = `<h3>METAR (& TAF)</h3><p>Error loading weather data.</p>`;
-        }
-    }
-
-    // Function to update data based on selected airport
-    function updateData(icao) {
-        airportTitle.textContent = `Weather for ${icao}`;
-        fetchAirportInfo(icao);
-        fetchWeather(icao);
-    }
-
-    // Function to handle search box input
-    function handleSearch() {
-        const searchValue = searchBox.value.trim().toUpperCase();
-        if (searchValue && /^[A-Z]{4}$/.test(searchValue)) {
-            updateData(searchValue); // Fetch data for the entered ICAO
-        } else {
-            alert("Please enter a valid ICAO code (4 letters).");
-        }
-    }
-
-    // Function to start auto-refresh
-    function startAutoRefresh() {
-        const autoRefresh = localStorage.getItem("autoRefresh") || "300000"; // Default to 5 minutes
-        const interval = parseInt(autoRefresh, 10);
-
-        if (interval > 0) {
-            autoRefreshInterval = setInterval(() => {
-                const selectedIcao = dropdown.value || searchBox.value.trim().toUpperCase();
-                if (selectedIcao && /^[A-Z]{4}$/.test(selectedIcao)) {
-                    updateData(selectedIcao); // Refresh the METAR data
-                }
-            }, interval);
-        }
-    }
-
-    // Function to stop auto-refresh
-    function stopAutoRefresh() {
-        if (autoRefreshInterval) {
-            clearInterval(autoRefreshInterval);
-        }
-    }
-
-    // Function to restart auto-refresh with new interval
-    function restartAutoRefresh() {
-        stopAutoRefresh();
-        startAutoRefresh();
-    }
-
-    // Event listeners
-    if (toggleModeBtn) {
-        toggleModeBtn.addEventListener("click", toggleMode);
-    }
-    if (dropdown) {
-        dropdown.addEventListener("change", (e) => {
-            updateData(e.target.value); // Update data when dropdown selection changes
-        });
-    }
-    if (searchBox) {
-        searchBox.addEventListener("input", () => {
-            const searchValue = searchBox.value.trim().toUpperCase();
-            createDropdown(searchValue); // Filter dropdown options and update data
-        });
-        searchBox.addEventListener("keypress", (e) => {
-            if (e.key === "Enter") {
-                handleSearch(); // Handle Enter key press
-            }
-        });
-    }
-    if (findButton) {
-        findButton.addEventListener("click", handleSearch); // Handle Find button click
-    }
-
-    // Initialize
-    if (dropdown) {
-        createDropdown(); // Populate the dropdown with airports
-        updateData(dropdown.value); // Load default selection (first airport in list)
-    }
-    loadDarkModePreference(); // Load dark mode preference
-    startAutoRefresh(); // Start auto-refresh
-
-    // Listen for changes to auto-refresh settings
-    window.addEventListener("storage", (event) => {
-        if (event.key === "autoRefresh") {
-            restartAutoRefresh(); // Restart auto-refresh with the new interval
-        }
-    });
-});
+}
