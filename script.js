@@ -50,40 +50,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Function to fetch airport info
-    async function fetchAirportInfo(icao) {
-        const url = `https://cors-anywhere.herokuapp.com/https://aviationweather.gov/api/data/airport?ids=${icao}`;
-        try {
-            const response = await fetch(url);
-            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            const data = await response.text();
-            console.log("Airport Info:", data); // Debugging
-            airportInfoBox.innerHTML = `<h3>Airport Info</h3><pre>${data}</pre>`;
-        } catch (error) {
-            console.error("Error loading airport info:", error);
-            airportInfoBox.innerHTML = `<h3>Airport Info</h3><p>Error loading airport data.</p>`;
-        }
-    }
-
-    // Function to fetch weather data
+    // Function to fetch weather data from a CORS-enabled API
     async function fetchWeather(icao) {
-        const url = `https://cors-anywhere.herokuapp.com/https://aviationweather.gov/api/data/metar?ids=${icao}`;
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=60.17&longitude=24.94&current_weather=true`;
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-            const data = await response.text();
-            console.log("METAR Data:", data); // Debugging
-            weatherBox.innerHTML = `<h3>METAR (& TAF)</h3><pre>${data}</pre>`;
+            const data = await response.json();
+            console.log("Weather Data:", data);
+            weatherBox.innerHTML = `<h3>Weather</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
         } catch (error) {
             console.error("Error loading weather data:", error);
-            weatherBox.innerHTML = `<h3>METAR (& TAF)</h3><p>Error loading weather data. Please try again later.</p>`;
+            weatherBox.innerHTML = `<h3>Weather</h3><p>Error loading weather data. Please try again later.</p>`;
         }
     }
 
     // Function to update data based on selected airport
     function updateData(icao) {
         airportTitle.textContent = `Weather for ${icao}`;
-        fetchAirportInfo(icao);
         fetchWeather(icao);
     }
 
@@ -95,34 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             alert("Please enter a valid ICAO code (4 letters).");
         }
-    }
-
-    // Function to start auto-refresh
-    function startAutoRefresh() {
-        const autoRefresh = localStorage.getItem("autoRefresh") || "300000"; // Default to 5 minutes
-        const interval = parseInt(autoRefresh, 10);
-
-        if (interval > 0) {
-            autoRefreshInterval = setInterval(() => {
-                const selectedIcao = dropdown.value || searchBox.value.trim().toUpperCase();
-                if (selectedIcao && /^[A-Z]{4}$/.test(selectedIcao)) {
-                    updateData(selectedIcao); // Refresh the METAR data
-                }
-            }, interval);
-        }
-    }
-
-    // Function to stop auto-refresh
-    function stopAutoRefresh() {
-        if (autoRefreshInterval) {
-            clearInterval(autoRefreshInterval);
-        }
-    }
-
-    // Function to restart auto-refresh with new interval
-    function restartAutoRefresh() {
-        stopAutoRefresh();
-        startAutoRefresh();
     }
 
     // Event listeners
@@ -155,12 +111,4 @@ document.addEventListener("DOMContentLoaded", () => {
         updateData(dropdown.value); // Load default selection (first airport in list)
     }
     loadDarkModePreference(); // Load dark mode preference
-    startAutoRefresh(); // Start auto-refresh
-
-    // Listen for changes to auto-refresh settings
-    window.addEventListener("storage", (event) => {
-        if (event.key === "autoRefresh") {
-            restartAutoRefresh(); // Restart auto-refresh with the new interval
-        }
-    });
 });
