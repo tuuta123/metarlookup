@@ -50,23 +50,29 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Function to fetch airport info (mock data)
+    // Function to fetch airport info
     async function fetchAirportInfo(icao) {
-        const mockData = `Airport Info for ${icao}:
-Name: Helsinki-Vantaa Airport
-Location: Helsinki, Finland
-Elevation: 55m
-Timezone: UTC +2`;
-        airportInfoBox.innerHTML = `<h3>Airport Info</h3><pre>${mockData}</pre>`;
+        const url = `/airport/${icao}`;
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("Error fetching airport data");
+            const data = await response.text();
+            console.log("Airport Info:", data); // Debugging
+            airportInfoBox.innerHTML = `<h3>Airport Info</h3><pre>${data}</pre>`;
+        } catch (error) {
+            console.error("Error loading airport info:", error);
+            airportInfoBox.innerHTML = `<h3>Airport Info</h3><p>Error loading airport data.</p>`;
+        }
     }
 
-    // Function to fetch weather data from AviationWeather.gov
+    // Function to fetch weather data
     async function fetchWeather(icao) {
-        const url = `https://aviationweather.gov/api/data/metar?ids=${icao}`;
+        const url = `/weather/${icao}`;
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error("Error fetching weather data");
             const data = await response.text();
+            console.log("METAR Data:", data); // Debugging
             weatherBox.innerHTML = `<h3>METAR (& TAF)</h3><pre>${data}</pre>`;
         } catch (error) {
             console.error("Error loading weather data:", error);
