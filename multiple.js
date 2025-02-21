@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Function to fetch and display METAR data
     async function fetchAndDisplayMetar(icao) {
-        const url = `https://aviationweather.gov/api/data/metar?ids=${icao}`;
+        const url = `/weather/${icao}`;
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error("Error fetching METAR data");
