@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metar - Multiple</title>
+    <title>EFIN Sector</title>
     <link rel="stylesheet" href="style.css">
     <script>
-        // Apply theme before the page loads
-        const savedTheme = localStorage.getItem("theme") || "light";
+        // Apply dark mode preference before the page renders
+        const savedTheme = localStorage.getItem("theme");
         if (savedTheme === "dark") {
             document.documentElement.classList.add("dark-mode");
         }
@@ -16,28 +16,26 @@
 <body>
     <div class="container">
         <header>
-            <h1 id="site-title">METARs (Multiple)</h1>
+            <h1 id="site-title">EFIN Sector</h1>
             <nav>
                 <a href="index.html">Single</a>
                 <a href="multiple.html">Multiple</a>
                 <a href="efin.html">EFIN</a>
                 <a href="settings.html">Settings</a>
             </nav>
-            <button id="toggle-mode">🌙 Dark Mode</button>
+            <!-- Refresh button in the top-right corner -->
+            <button id="refresh-efin">Refresh</button>
         </header>
 
         <div class="content">
-            <div class="multiple-panel">
-                <h2>Add METARs</h2>
-                <input type="text" id="metar-input" placeholder="Enter ICAO code (e.g., EFHK)">
-                <button id="add-metar">Add</button>
-                <button id="clear-all">Clear All</button> <!-- Added Clear All button -->
-                <div id="metar-list"></div>
+            <div class="efin-panel">
+                <h2>Flight Plans in EFIN Sector</h2>
+                <div id="efin-list"></div>
             </div>
         </div>
     </div>
 
     <script src="script.js"></script>
-    <script src="multiple.js"></script>
+    <script src="efin.js"></script>
 </body>
 </html>

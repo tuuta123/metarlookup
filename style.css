@@ -82,7 +82,7 @@ nav a:hover {
     background-color: var(--secondary);
 }
 
-/* Toggle button */
+/* Toggle button (Dark Mode) */
 #toggle-mode {
     background: var(--secondary);
     border: none;
@@ -92,9 +92,27 @@ nav a:hover {
     color: white;
     font-weight: bold;
     font-size: 16px;
+    margin-left: 10px; /* Add spacing between nav links and button */
 }
 
 #toggle-mode:hover {
+    background: var(--primary);
+}
+
+/* Refresh button */
+#refresh-efin {
+    background: var(--secondary);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    margin-left: 10px; /* Add spacing between nav links and button */
+}
+
+#refresh-efin:hover {
     background: var(--primary);
 }
 
@@ -258,23 +276,6 @@ nav a:hover {
     overflow-wrap: break-word;
 }
 
-/* TAF Container (Multiple Mode) */
-.taf-container {
-    margin-top: 10px;
-    padding: 10px;
-    background: var(--card);
-    border-radius: 5px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.taf-container pre {
-    text-align: left;
-    white-space: pre-wrap;
-    font-family: monospace;
-    word-break: break-word;
-    overflow-wrap: break-word;
-}
-
 /* Remove Button (Multiple Mode) */
 .remove-metar {
     position: absolute;
@@ -293,6 +294,61 @@ nav a:hover {
 
 .remove-metar:hover {
     background: #e91e63;
+}
+
+/* EFIN Page */
+.efin-panel {
+    width: 100%;
+    background: var(--card);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Grid layout for METAR boxes */
+#efin-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+/* Compact METAR Box */
+.metar-box.compact {
+    margin-top: 0;
+    padding: 10px;
+    background: var(--background);
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.metar-box.compact h3 {
+    margin-bottom: 5px;
+    font-size: 16px;
+}
+
+.metar-box.compact pre {
+    font-size: 14px;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+/* Pop Out button */
+.pop-out-button {
+    background: var(--secondary);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 10px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.pop-out-button:hover {
+    background: var(--primary);
 }
 
 /* Settings Page */
@@ -364,7 +420,7 @@ nav a:hover {
         margin-top: 10px;
     }
 
-    #toggle-mode {
+    #toggle-mode, #refresh-efin {
         margin-top: 10px;
     }
 }
