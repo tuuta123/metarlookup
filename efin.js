@@ -183,7 +183,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <h2>${icao} METAR</h2>
                         <pre>${metar}</pre>
                         <div class="power-toys-info" id="power-toys-info">
-                            If you have Microsoft PowerToys installed, you can keep this window on top by pressing <strong>Win+Ctrl+T</strong>.
+                            Refreshes every 90 seconds. If you have Microsoft PowerToys installed, you can keep this window on top by pressing <strong>Win+Ctrl+T</strong>.
                         </div>
                         <button class="hide-button" id="hide-button">Hide</button>
                     </div>
